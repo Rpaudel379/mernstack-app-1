@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import cookie from "js-cookie";
+//import axios from "axios";
 const Navbar = () => {
   const { userData } = useContext(UserContext);
   const [loggedOut, setLoggedOut] = useState(false);
@@ -9,18 +10,12 @@ const Navbar = () => {
   // logout function
   const handleLogout = (e) => {
     e.preventDefault();
-    axios.post("https://mernstack-app1.herokuapp.com/logout").then((res) => {
-      const data = res.data;
-
-      if (data.loggedOut) {
-        setLoggedOut(true);
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 3000);
-      } else {
-        setLoggedOut(false);
-      }
-    });
+  
+    cookie.remove("jwt");
+    setLoggedOut(true);
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 3000);
   };
 
   return (

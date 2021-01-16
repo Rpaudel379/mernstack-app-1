@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import Tools from "../../Tools";
 import UserContext from "../../context/UserContext";
+import cookie from "js-cookie";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
@@ -29,24 +30,20 @@ const Login = (props) => {
         })
         .then((res) => {
           const data = res.data;
-          // if error in login in
-          if (data.errors) {
-            setUserErrors(data.errors);
-          } else {
-            setUserErrors();
-          }
-
-          //if logged in successfully
-          if (data.user) {
-            //setUserData(data.user);
+          console.log(data);
+          if (data) {
+            // setUserData({ token: data.token, user: data.user });
+            cookie.set("jwt", data.token, { expires: 5 });
             setLogged(true);
             setTimeout(() => {
-              // history.push("/");
-              window.location.href = "/dashboard";
-            }, 3000);
+              window.location.href = "/";
+            }, 2000);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          // if error in logging in
+          err.response.data && setUserErrors(err.response.data);
+        });
     } catch (err) {
       console.log(err);
     }

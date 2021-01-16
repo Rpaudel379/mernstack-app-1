@@ -3,6 +3,7 @@ import UserContext from "../../context/UserContext";
 import Error from "./Error";
 import Tools from "../../Tools";
 import axios from "axios";
+import cookie from "js-cookie";
 axios.defaults.withCredentials = true;
 
 const Dashboard = (props) => {
@@ -11,23 +12,32 @@ const Dashboard = (props) => {
   Tools(props);
 
   useEffect(() => {
-    axios.get("https://mernstack-app1.herokuapp.com/dashboard").then((res) => {
-      const data = res.data;
-      if (data.user) {
-        setUserData(data.user);
-        setIsLoggedIn(true);
+    const checkAuth = async () => {
+      let token = cookie.get("jwt");
+      if (token) {
+        try {
+          const tokenRes = await axios.post(
+            "https://mernstack-app1.herokuapp.com/valid",
+            null,
+            {
+              headers: { "x-auth-token": token },
+            }
+          );
+          if (tokenRes.data) {
+            console.log(tokenRes.data);
+            setUserData(tokenRes.data);
+            setIsLoggedIn(true);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       } else {
-        setIsLoggedIn(false);
-      }
-
-      if (data.redirect) {
-        setIsLoggedIn(false);
-
         setTimeout(() => {
           window.location.href = "/login";
         }, 1000);
       }
-    });
+    };
+    checkAuth();
   }, [setUserData]);
 
   const textContent = {
@@ -46,18 +56,6 @@ const Dashboard = (props) => {
       )}
     </>
   );
-
-  /* if (isLoggedIn) {
-    return (
-      <div className="dashboard">
-        <h1>dashboard</h1>
-      </div>
-    );
-  }
-
-  return (
-    <Error title="content blocked" bg="#284b63" textContent={textContent} />
-  ); */
 };
 
 export default Dashboard;

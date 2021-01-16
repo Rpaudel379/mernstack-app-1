@@ -9,20 +9,35 @@ import SignUp from "./components/pages/Signup";
 // context
 import UserContext from "./context/UserContext";
 import Dashboard from "./components/pages/Dashboard";
+import cookie from "js-cookie";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
 const App = () => {
   const [userData, setUserData] = useState();
+
   useEffect(() => {
-    axios.get("https://mernstack-app1.herokuapp.com").then((res) => {
-      const data = res.data;
-      if (data.user) {
-        setUserData(data.user);
-      } else {
-        setUserData();
+    const checkCookie = async () => {
+      let token = cookie.get("jwt");
+      if (token) {
+        try {
+          const tokenRes = await axios.post(
+            "https://mernstack-app1.herokuapp.com/valid",
+            null,
+            {
+              headers: { "x-auth-token": token },
+            }
+          );
+          if (tokenRes.data) {
+            console.log(tokenRes.data);
+            setUserData(tokenRes.data);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
-    });
+    };
+    checkCookie();
   }, []);
 
   return (
