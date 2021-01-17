@@ -22,7 +22,7 @@ const App = () => {
       if (token) {
         try {
           const tokenRes = await axios.post(
-            "http://localhost:5000/valid",
+            "https://mernstack-app1.herokuapp.com/valid",
             null,
             {
               headers: { "x-auth-token": token },
