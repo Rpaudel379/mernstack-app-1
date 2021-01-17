@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
 import cookie from "js-cookie";
