@@ -23,7 +23,7 @@ const Signup = (props) => {
 
     try {
       axios
-        .post("https://mernstack-app1.herokuapp.com/signup", {
+        .post("http://localhost:5000/signup", {
           username,
           email,
           password,

@@ -17,7 +17,7 @@ const Dashboard = (props) => {
       if (token) {
         try {
           const tokenRes = await axios.post(
-            "https://mernstack-app1.herokuapp.com/valid",
+            "http://localhost:5000/valid",
             null,
             {
               headers: { "x-auth-token": token },
